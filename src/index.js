@@ -22,6 +22,8 @@ app.set('view-engine', '.hbs');
 
 //Middlewares
 app.use(express.urlencoded({ extended: false }));
+
+        //Sirve para revisar input ocultos (Necesario para el funcionamiento del método PUT)
 app.use(methodOverRide('_method'));
 app.use(session({
     secret: 'mysecretapp',

@@ -36,8 +36,10 @@ router.get("/notes", async (req, res) => {
     const contexto = {
       notes: documentos.map((documento) => {
         return {
+          _id: documento._id,
           title: documento.title,
           description: documento.description,
+          date: documento.date
         };
       }),
     };
@@ -46,5 +48,39 @@ router.get("/notes", async (req, res) => {
     });
   });
 });
+
+router.get('/notes/edit/:id', async (req, res) => {
+  const { id } = req.params;
+  await Note.findById(id)
+    .then(documento => {
+      const contexto = {
+        note: {
+          _id: documento._id,
+          title: documento.title,
+          description: documento.description,
+          date: documento.date,
+        },
+      };
+      res.render('notes/edit-note.hbs', {
+        note: contexto.note
+      });
+    })
+    .catch(err => {
+      console.error(err);
+    });
+});
+
+router.put('/notes/edit-note/:id', async (req, res) => {
+  const { title, description } = req.body;
+  const { id } = req.params;
+  await Note.findByIdAndUpdate(id, { title, description });
+  res.redirect('/notes');
+});
+
+router.get('/notes/delete/:id', async (req, res) => {
+  const { id } = req.params;
+  await Note.findByIdAndDelete(id);
+  res.redirect('/notes');
+})
 
 module.exports = router;
