@@ -3,6 +3,7 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const methodOverRide = require('method-override');
+const flash = require('connect-flash');
 
 //Initialization
 const app = express();
@@ -23,16 +24,21 @@ app.set('view-engine', '.hbs');
 //Middlewares
 app.use(express.urlencoded({ extended: false }));
 
-        //Sirve para revisar input ocultos (Necesario para el funcionamiento del método PUT)
+//Sirve para revisar input ocultos (Necesario para el funcionamiento del método PUT)
 app.use(methodOverRide('_method'));
 app.use(session({
     secret: 'mysecretapp',
     resave: true,
     saveUninitialized: true,
 }))
+app.use(flash());
 
 //Global variables
-
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    next();
+})
 
 //Routes
 app.use(require('./routes/index'));
