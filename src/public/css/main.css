@@ -19,3 +19,7 @@ body {
 .column {
   min-height: 200px;
 }
+
+.logo {
+  width: 30%;
+}

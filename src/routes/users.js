@@ -1,16 +1,24 @@
 const router = require('express').Router();
 const User = require('../models/User');
 
+const passport = require('passport');
+
 router.get('/users/signin', (req, res) => {
     res.render('users/signin.hbs');
 });
 
-router.get('/users/signup', (req, res) => {
-    res.render('users/signup.hbs')
+router.post('/users/signin', passport.authenticate('local', {
+    successRedirect: '/notes',
+    failureRedirect: '/users/signin',
+    failureFlash: true
+}));
+
+router.get('/users/signup', async (req, res) => {
+    res.render('users/signup.hbs');
 });
 
 router.post('/users/signup', async (req, res) => {
-    const { name, email, password, password2 } = req.body;
+    let { name, email, password, password2 } = req.body;
     const errors = [];
     if (name === '' || email === '' || password === '' || password2 === '') {
         errors.push({text: 'Fill in all fields'});
