@@ -45,4 +45,10 @@ router.post('/users/signup', async (req, res) => {
     res.render('users/signup.hbs', {errors, name, email, password, password2});
 });
 
+
+router.get('/users/logout', (req, res) => {
+    req.logOut();
+    res.redirect('/');
+});
+
 module.exports = router;
